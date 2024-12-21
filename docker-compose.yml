@@ -1,0 +1,43 @@
+services:
+  scylla:
+    image: scylladb/scylla
+    container_name: rotteneggs-db
+    hostname: ${ROTTENEGGS_DB_HOST}
+    command: --smp=1
+    ports:
+      - ${ROTTENEGGS_DB_PORT}:${ROTTENEGGS_DB_PORT}
+    volumes:
+      - ./scylla/data:/var/lib/scylla
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  scylla-init-load:
+    image: scylladb/scylla
+    container_name: rotteneggs-init-load
+    volumes:
+      - ./scylla:/scripts
+    entrypoint: ["bash", "/scripts/init.sh"]
+    depends_on:
+      scylla:
+        condition: service_healthy
+
+  rotteneggs:
+    build: ./rotteneggs
+    container_name: rotteneggs
+    volumes:
+      - ./rotteneggs/main.py:/app/main.py
+    environment:
+      - APP_HOST=${ROTTENEGGS_HOST}
+      - APP_PORT=${ROTTENEGGS_PORT}
+      - KEYSPACE_NAME=${ROTTENEGGS_RATER_KEYSPACE}
+      - DB_HOST=${ROTTENEGGS_DB_HOST}
+      - DB_PORT=${ROTTENEGGS_DB_PORT}
+    ports:
+      - ${ROTTENEGGS_PORT}:${ROTTENEGGS_PORT}
+    command: ["fastapi", "run", "main.py", "--host", "${ROTTENEGGS_HOST}", "--port", "${ROTTENEGGS_PORT}"]
+    depends_on:
+      scylla:
+        condition: service_healthy

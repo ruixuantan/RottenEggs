@@ -1,0 +1,10 @@
+*.DS_Store
+*.vscode
+
+venv/
+__pycache__/
+data/
+
+scylla/*.csv
+scylla/2_insert_movies.cql
+scylla/data/
