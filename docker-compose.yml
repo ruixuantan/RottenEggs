@@ -41,3 +41,21 @@ services:
     depends_on:
       scylla:
         condition: service_healthy
+
+  notification:
+    build: ./notification
+    container_name: notification
+    volumes:
+      - ./notification/main.py:/app/main.py
+    environment:
+      - APP_HOST=${NOTIFICATION_HOST}
+      - APP_PORT=${NOTIFICATION_PORT}
+      - KEYSPACE_NAME=${ROTTENEGGS_NOTIFICATION_KEYSPACE}
+      - DB_HOST=${ROTTENEGGS_DB_HOST}
+      - DB_PORT=${ROTTENEGGS_DB_PORT}
+    ports:
+      - ${NOTIFICATION_PORT}:${NOTIFICATION_PORT}
+    command: ["fastapi", "run", "main.py", "--host", "${NOTIFICATION_HOST}", "--port", "${NOTIFICATION_PORT}"]
+    depends_on:
+      scylla:
+        condition: service_healthy
