@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS notification.subscribers (
 );
 
 INSERT INTO notification.subscribers (id, name, kafka_topic, timestamp, preferences) VALUES
-(uuid(), 'Documentary_Analytics_System', 'Documentary_Analytics_Topic', currentTimestamp(), textAsBlob('{"preferences": [{"dimension": "genres", "contains": [99]}]}'));
+(uuid(), 'Documentary_Analytics_System', 'DocumentaryAnalyticsTopic', currentTimestamp(), textAsBlob('{"preferences": [{"dimension": "genres", "contains": [99]}]}'));
 
 INSERT INTO notification.subscribers (id, name, kafka_topic, timestamp, preferences) VALUES
-(uuid(), 'Indiefilm_Recommender_System', 'Indiefilm_Recommender_Topic', currentTimestamp(), textAsBlob('{"preferences": [{"dimension": "revenue", "gt": 500000, "lt": 1000000}]}'));
+(uuid(), 'Indiefilm_Recommender_System', 'IndiefilmRecommenderTopic', currentTimestamp(), textAsBlob('{"preferences": [{"dimension": "revenue", "gt": 500000, "lt": 1000000}]}'));
