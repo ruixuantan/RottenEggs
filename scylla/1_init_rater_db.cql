@@ -23,15 +23,10 @@ CREATE TABLE IF NOT EXISTS rater.movies (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS rater.genres (
-    id int,
-    name text,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS rater.movie_genres (
     movie_id int,
     genre_id int,
+    genre_name text,
     PRIMARY KEY (movie_id, genre_id)
 ) WITH CLUSTERING ORDER BY (genre_id ASC);
 
@@ -44,5 +39,4 @@ CREATE TABLE IF NOT EXISTS rater.ratings (
     PRIMARY KEY (id, movie_id)
 ) WITH CLUSTERING ORDER BY (movie_id ASC);
 
-COPY rater.genres FROM 'scripts/genres.csv' WITH HEADER = true;
 COPY rater.movie_genres FROM 'scripts/movie_genres.csv' WITH HEADER = true;

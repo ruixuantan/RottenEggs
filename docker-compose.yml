@@ -35,6 +35,8 @@ services:
       - KEYSPACE_NAME=${ROTTENEGGS_RATER_KEYSPACE}
       - DB_HOST=${ROTTENEGGS_DB_HOST}
       - DB_PORT=${ROTTENEGGS_DB_PORT}
+      - NOTIFICATION_HOST=${NOTIFICATION_HOST}
+      - NOTIFICATION_PORT=${NOTIFICATION_PORT}
     ports:
       - ${ROTTENEGGS_PORT}:${ROTTENEGGS_PORT}
     command: ["fastapi", "run", "main.py", "--host", "${ROTTENEGGS_HOST}", "--port", "${ROTTENEGGS_PORT}"]

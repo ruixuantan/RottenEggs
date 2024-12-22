@@ -1,6 +1,6 @@
 import csv
 import json
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, Iterator
 
 Row = Dict[str, Any]
 
@@ -35,13 +35,8 @@ BLOB_MOVIE_HEADERS = [
 ]
 MOVIES_PATH = "scylla/2_insert_movies.cql"
 
-GENRES = []
-GENRE_HEADERS = ["id", "name"]
-GENRES_PATH = "scylla/genres.csv"
-GENRE_IDS = set()
-
 MOVIE_GENRES = []
-MOVIE_GENRES_HEADERS = ["movie_id", "genre_id"]
+MOVIE_GENRES_HEADERS = ["movie_id", "genre_id", "genre_name"]
 MOVIE_GENRES_PATH = "scylla/movie_genres.csv"
 
 
@@ -57,17 +52,14 @@ def process_row(row: Row) -> None:
     MOVIES.append({key: row[key] for key in MOVIE_HEADERS})
     genres = json.loads(row["genres"])
     for genre in genres:
-        if genre["id"] not in GENRE_IDS:
-            GENRE_IDS.add(genre["id"])
-            GENRES.append(genre)
-        MOVIE_GENRES.append({"movie_id": row["id"], "genre_id": genre["id"]})
+        MOVIE_GENRES.append({"movie_id": row["id"], "genre_id": genre["id"], "genre_name": genre["name"]})
 
 
-def write_file(path: str, header: List[str], table: List[Row]) -> None:
-    with open(path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=header)
+def write_movie_genre_file() -> None:
+    with open(MOVIE_GENRES_PATH, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=MOVIE_GENRES_HEADERS)
         writer.writeheader()
-        for row in table:
+        for row in MOVIE_GENRES:
             writer.writerow(row)
 
 
@@ -93,8 +85,7 @@ def main():
     for row in read_file():
         process_row(row)
     write_movie_insert_file()
-    write_file(GENRES_PATH, GENRE_HEADERS, GENRES)
-    write_file(MOVIE_GENRES_PATH, MOVIE_GENRES_HEADERS, MOVIE_GENRES)
+    write_movie_genre_file()
 
 
 if __name__ == "__main__":
