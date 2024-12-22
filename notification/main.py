@@ -7,12 +7,14 @@ from typing import Any, List, Optional
 import dotenv
 import pydantic
 from cassandra.cluster import Cluster
+from confluent_kafka import Producer
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 dotenv.load_dotenv()
 cluster = Cluster([os.getenv("DB_HOST")], port=os.getenv("DB_PORT"))
 session = cluster.connect(os.getenv("KEYSPACE_NAME"))
+kafka = Producer({"bootstrap.servers": f"{os.getenv('KAFKA_HOST')}:{os.getenv('KAFKA_PORT')}"})
 subscribers = []
 
 
@@ -71,11 +73,10 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/notifications")
 async def create_notification(message: Message):
-    # TODO: convert to async
     for subscriber in subscribers:
         if subscriber.to_notify(message):
-            # TODO: send kafka message
-            print(subscriber, message)
+            kafka.produce(subscriber.topic_name, message.model_dump_json())
+    kafka.flush()
     return {"status": "ok"}
 
 

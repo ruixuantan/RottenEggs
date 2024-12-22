@@ -55,6 +55,8 @@ services:
       - KEYSPACE_NAME=${ROTTENEGGS_NOTIFICATION_KEYSPACE}
       - DB_HOST=${ROTTENEGGS_DB_HOST}
       - DB_PORT=${ROTTENEGGS_DB_PORT}
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=${KAFKA_PORT}
     ports:
       - ${NOTIFICATION_PORT}:${NOTIFICATION_PORT}
     command: ["fastapi", "run", "main.py", "--host", "${NOTIFICATION_HOST}", "--port", "${NOTIFICATION_PORT}"]
@@ -97,3 +99,39 @@ services:
     entrypoint: ["bash", "/scripts/init.sh"]
     depends_on:
       - kafka
+
+  documentary-analytics-notifier:
+    build: ./notification_worker
+    container_name: documentary-analytics-notifier
+    volumes:
+      - ./notification_worker/worker.py:/app/worker.py
+    environment:
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=${KAFKA_PORT}
+    command: ["python", "worker.py", "-g", "DocumentaryAnalyticsGroup", "-t", "DocumentaryAnalyticsTopic", "-i", "1"]
+    depends_on:
+      - notification
+
+  indiefilm-recommender-notifier:
+    build: ./notification_worker
+    container_name: indiefilm-recommender-notifier
+    volumes:
+      - ./notification_worker/worker.py:/app/worker.py
+    environment:
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=${KAFKA_PORT}
+    command: ["python", "worker.py", "-g", "IndiefilmRecommenderGroup", "-t", "IndiefilmRecommenderTopic", "-i", "1"]
+    depends_on:
+      - notification
+
+  consume-all-notifier:
+    build: ./notification_worker
+    container_name: consume-all-notifier
+    volumes:
+      - ./notification_worker/worker.py:/app/worker.py
+    environment:
+      - KAFKA_HOST=${KAFKA_HOST}
+      - KAFKA_PORT=${KAFKA_PORT}
+    command: ["python", "worker.py", "-g", "ConsumeAllGroup", "-t", "ConsumeAllTopic", "-i", "1"]
+    depends_on:
+      - notification

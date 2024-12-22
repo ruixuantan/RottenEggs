@@ -16,3 +16,6 @@ INSERT INTO notification.subscribers (id, name, kafka_topic, timestamp, preferen
 
 INSERT INTO notification.subscribers (id, name, kafka_topic, timestamp, preferences) VALUES
 (uuid(), 'Indiefilm_Recommender_System', 'IndiefilmRecommenderTopic', currentTimestamp(), textAsBlob('{"preferences": [{"dimension": "revenue", "gt": 500000, "lt": 1000000}]}'));
+
+INSERT INTO notification.subscribers (id, name, kafka_topic, timestamp, preferences) VALUES
+(uuid(), 'Consume_All_System', 'ConsumeAllTopic', currentTimestamp(), textAsBlob('{"preferences": []}'));
