@@ -8,3 +8,17 @@ data/
 scylla/*.csv
 scylla/2_insert_movies.cql
 scylla/data/
+
+dashboard/node_modules
+
+# Output
+dashboard/.output
+dashboard/.vercel
+dashboard/.netlify
+dashboard/.wrangler
+dashboard/.svelte-kit
+dashboard/build
+
+# Vite
+dashboard/vite.config.js.timestamp-*
+dashboard/vite.config.ts.timestamp-*

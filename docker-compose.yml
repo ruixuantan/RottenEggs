@@ -135,3 +135,12 @@ services:
     command: ["python", "worker.py", "-g", "ConsumeAllGroup", "-t", "ConsumeAllTopic", "-i", "1"]
     depends_on:
       - notification
+
+  dashboard:
+    build: ./dashboard
+    container_name: dashboard
+    volumes:
+      - ./dashboard:/app
+    ports:
+      - ${DASHBOARD_PORT}:${DASHBOARD_PORT}
+    command: ["bun", "./build"]
