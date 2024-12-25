@@ -1,13 +1,13 @@
-FROM oven/bun
+FROM oven/bun AS builder
 
 WORKDIR /app
 
-COPY package.json package.json
+COPY . .
 
 RUN bun install
-
-COPY . .
 RUN bun run build
 
-EXPOSE 3000
-ENTRYPOINT ["bun", "./build"]
+FROM oven/bun
+
+COPY --from=builder /app/build .
+COPY --from=builder /app/.env .

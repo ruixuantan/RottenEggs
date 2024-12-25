@@ -139,8 +139,6 @@ services:
   dashboard:
     build: ./dashboard
     container_name: dashboard
-    volumes:
-      - ./dashboard:/app
     ports:
       - ${DASHBOARD_PORT}:${DASHBOARD_PORT}
-    command: ["bun", "./build"]
+    command: ["bun", "run", "index.js"]

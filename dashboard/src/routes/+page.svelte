@@ -1,10 +1,39 @@
+<script>
+  import { onMount } from "svelte";
+  import { getMovieIds, generateReview, sleep } from "$lib/utils";
+
+  let generating = $state(false);
+  let rate = $state(1);
+  let movieIds = [];
+
+  onMount(async () => { movieIds = await getMovieIds(); });
+
+  export async function generateReviews() {
+    generating = true;
+    const sleepTime = 1 / rate;
+    while (generating) {
+      const movieId = movieIds[Math.floor(Math.random() * movieIds.length)];
+      generateReview(movieId);
+      await sleep(sleepTime * 1000);
+    }
+  }
+
+  export function stopGeneration() {
+    generating = false;
+  }
+</script>
+
 <div class="rotteneggs">
   <h1 class="text-primary">RottenEggs</h1>
 
   <div class="rotteneggs-content">
     <div class="review-generation">
-      <input type="text" placeholder="Generation Rate/s" class="input input-bordered w-full max-w-xs" />
-      <button class="btn btn-primary">Generate Reviews</button>
+      <input type="text" bind:value={rate} placeholder="Generation Rate/s" class="input input-bordered w-full max-w-xs" />
+      {#if generating}
+        <button class="btn btn-active btn-secondary" onclick={stopGeneration}>Stop</button>
+      {:else}
+        <button class="btn btn-primary" onclick={generateReviews}>Generate Reviews</button>
+      {/if}
     </div>
 
     <div class="rate-monitor">
