@@ -10,4 +10,5 @@ do
     --create --topic ${topic} --if-not-exists \
     --partitions 1 --replication-factor 1
 done
-kafka-topics.sh --bootstrap-server kafka:9092 --list
+
+kafka-topics.sh --bootstrap-server ${KAFKA_HOST}:${KAFKA_PORT} --list

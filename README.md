@@ -1,4 +1,4 @@
-# Rotten Eggs
+# Rotten Eggs 🥚🐣🍳
 
 An exploration of notification services.
 Inspired by [bookmarks](https://bookmarks.reviews), kind of.
