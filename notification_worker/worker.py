@@ -12,7 +12,6 @@ kafka_url = f"{os.getenv('KAFKA_HOST')}:{os.getenv('KAFKA_PORT')}"
 downstream_url = (
     f"http://{os.getenv('DOWNSTREAM_HOST')}:{os.getenv('DOWNSTREAM_PORT')}/{os.getenv('DOWNSTREAM_RESOURCE')}"
 )
-print(downstream_url)
 
 
 def connect_topic(kafka_topic: str):

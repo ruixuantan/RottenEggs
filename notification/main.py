@@ -45,7 +45,7 @@ class Preference:
         if self.contains:
             return all(elem in dim for elem in self.contains)
         elif self.lt and self.gt:
-            return self.lt <= dim <= self.gt
+            return self.gt <= dim <= self.lt
         else:
             return False
 
