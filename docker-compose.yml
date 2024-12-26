@@ -108,6 +108,9 @@ services:
     environment:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=${KAFKA_PORT}
+      - DOWNSTREAM_HOST=${DASHBOARD_HOST}
+      - DOWNSTREAM_PORT=${DASHBOARD_PORT}
+      - DOWNSTREAM_RESOURCE=documentary
     command: ["python", "worker.py", "-g", "DocumentaryAnalyticsGroup", "-t", "DocumentaryAnalyticsTopic", "-i", "1"]
     depends_on:
       - notification
@@ -120,6 +123,9 @@ services:
     environment:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=${KAFKA_PORT}
+      - DOWNSTREAM_HOST=${DASHBOARD_HOST}
+      - DOWNSTREAM_PORT=${DASHBOARD_PORT}
+      - DOWNSTREAM_RESOURCE=indiefilm
     command: ["python", "worker.py", "-g", "IndiefilmRecommenderGroup", "-t", "IndiefilmRecommenderTopic", "-i", "1"]
     depends_on:
       - notification
@@ -132,6 +138,9 @@ services:
     environment:
       - KAFKA_HOST=${KAFKA_HOST}
       - KAFKA_PORT=${KAFKA_PORT}
+      - DOWNSTREAM_HOST=${DASHBOARD_HOST}
+      - DOWNSTREAM_PORT=${DASHBOARD_PORT}
+      - DOWNSTREAM_RESOURCE=consumeall
     command: ["python", "worker.py", "-g", "ConsumeAllGroup", "-t", "ConsumeAllTopic", "-i", "1"]
     depends_on:
       - notification
@@ -141,4 +150,4 @@ services:
     container_name: dashboard
     ports:
       - ${DASHBOARD_PORT}:${DASHBOARD_PORT}
-    command: ["bun", "run", "index.js"]
+    command: ["bun", "run", "server.js"]

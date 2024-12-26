@@ -7,8 +7,8 @@ const config = {
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter({
-			host: import.meta.env.VITE_ROTTENEGGS_HOST,
-			port: import.meta.env.VITE_ROTTENEGGS_PORT,
+			host: import.meta.env.VITE_DASHBOARD_HOST,
+			port: import.meta.env.VITE_DASHBOARD_PORT,
 		})
 	}
 };

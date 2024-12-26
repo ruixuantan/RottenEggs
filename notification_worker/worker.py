@@ -3,11 +3,16 @@ import logging
 import os
 import time
 
+import requests
 from confluent_kafka import Consumer
 from confluent_kafka.admin import AdminClient
 
 logging.basicConfig(level=logging.INFO)
 kafka_url = f"{os.getenv('KAFKA_HOST')}:{os.getenv('KAFKA_PORT')}"
+downstream_url = (
+    f"http://{os.getenv('DOWNSTREAM_HOST')}:{os.getenv('DOWNSTREAM_PORT')}/{os.getenv('DOWNSTREAM_RESOURCE')}"
+)
+print(downstream_url)
 
 
 def connect_topic(kafka_topic: str):
@@ -29,10 +34,9 @@ def consume(kafka: Consumer, interval: float):
             elif msg.error():
                 logging.error(msg.error())
             else:
-                # POST request to system
                 logging.info(msg.value().decode("utf-8"))
-    except KeyboardInterrupt:
-        pass
+                # TODO: error retry
+                requests.post(downstream_url, json=msg.value().decode("utf-8"))
     finally:
         kafka.close()
 

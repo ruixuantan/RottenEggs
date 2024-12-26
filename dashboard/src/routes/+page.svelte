@@ -1,9 +1,13 @@
 <script>
   import { onMount } from "svelte";
-  import { getMovieIds, generateReview, sleep } from "$lib/utils";
+  import { getMovieIds, generateReview, getRates, sleep } from "$lib/utils";
+  import { calculateRates } from "$lib/datastore";
 
   let generating = $state(false);
   let rate = $state(1);
+  let documentaryRate = $state(0);
+  let indiefilmRate = $state(0);
+  let consumeallRate = $state(0);
   let movieIds = [];
 
   onMount(async () => { movieIds = await getMovieIds(); });
@@ -18,8 +22,12 @@
     }
   }
 
-  export function stopGeneration() {
+  export async function stopGeneration() {
     generating = false;
+    const rates = await getRates();
+    documentaryRate = Math.round(rates.documentary * 100) / 100;
+    indiefilmRate = Math.round(rates.indiefilm * 100) / 100;
+    consumeallRate = Math.round(rates.consumeall * 100) / 100;
   }
 </script>
 
@@ -39,19 +47,19 @@
     <div class="rate-monitor">
       <div class="card bg-base-100 w-96 shadow-xl">
         <div class="card-body">
-          <h3 class="card-title">Documentary Analytics: 1.0/s</h3>
+          <h3 class="card-title">Documentary Analytics: {documentaryRate} reviews/s</h3>
         </div>
       </div>
 
       <div class="card bg-base-100 w-96 shadow-xl">
         <div class="card-body">
-          <h3 class="card-title">Indiefilm Recommender: 1.0/s</h3>
+          <h3 class="card-title">Indiefilm Recommender: {indiefilmRate} reviews/s</h3>
         </div>
       </div>
 
       <div class="card bg-base-100 w-96 shadow-xl">
         <div class="card-body">
-          <h3 class="card-title">Consume All: 1.0/s</h3>
+          <h3 class="card-title">Consume All: {consumeallRate} reviews/s</h3>
         </div>
       </div>
     </div>

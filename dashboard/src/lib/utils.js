@@ -1,4 +1,5 @@
 const url = `http://${import.meta.env.VITE_ROTTENEGGS_HOST}:${import.meta.env.VITE_ROTTENEGGS_PORT}`
+const svelte_url = `http://localhost:${import.meta.env.VITE_DASHBOARD_PORT}`
 
 export async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -21,4 +22,10 @@ export async function generateReview(movieId) {
     body: JSON.stringify({movie_id: movieId, stars: stars, review: "some review"})
   });
   const res = await response.json();
+}
+
+export async function getRates() {
+  const response = await fetch(`${svelte_url}/stats`);
+  const rates = await response.json();
+  return rates;
 }
